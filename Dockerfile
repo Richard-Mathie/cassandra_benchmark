@@ -2,13 +2,17 @@ FROM ricmathie/python_cassandra:python_2.7
 
 MAINTAINER Richard Mathie "Richard.Mathie@amey.co.uk"
 
-COPY cassandra-driver/benchmarks /benchmarks
+COPY vendor/github.com/datastax/python-driver/requirements.txt \
+     vendor/github.com/datastax/python-driver/test-requirements.txt\
+     /benchmarks/
 
 WORKDIR /benchmarks
 
-ENV CASSANDRA=cassandra \
-    KEYSPACE=benchmark_1 \
+RUN pip install -r test-requirements.txt
 
-ENTRYPOINT cd /benchmarks; \
-           python callback_full_pipeline.py
-CMD [ "-H $CASSANDRA",  "-k $KEYSPACE", "--protocol-version=4",  "-m", "-p",  "--keep-data",  "--column-type uuid", "-t 6",  "-c 10",  "-n 40000"]
+COPY vendor/github.com/datastax/python-driver/benchmarks /benchmarks
+
+ENV CASSANDRA=cassandra \
+    KEYSPACE=benchmark_1
+
+CMD ["bash", "-c", "/usr/local/bin/python callback_full_pipeline.py -H $CASSANDRA -k $KEYSPACE --protocol-version=4 -m -p --keep-data --column-type=uuid -c 10 -n 40000"]
