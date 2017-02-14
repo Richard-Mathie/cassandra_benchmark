@@ -1,4 +1,4 @@
-FROM ricmathie/python_cassandra:python_2.7
+FROM ricmathie/python_cassandra:pypy_2
 
 MAINTAINER Richard Mathie "Richard.Mathie@amey.co.uk"
 
@@ -15,4 +15,4 @@ COPY vendor/github.com/datastax/python-driver/benchmarks /benchmarks
 ENV CASSANDRA=cassandra \
     KEYSPACE=benchmark_1
 
-CMD ["bash", "-c", "/usr/local/bin/python callback_full_pipeline.py -H $CASSANDRA -k $KEYSPACE --protocol-version=4 -m -p --keep-data --column-type=uuid -c 10 -n 40000"]
+CMD ["bash", "-c", "/usr/local/bin/pypy callback_full_pipeline.py -H $CASSANDRA -k $KEYSPACE --protocol-version=4 -m -p --keep-data --column-type=uuid -c 10 -n 40000"]
